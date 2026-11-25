@@ -1,0 +1,11 @@
+__pycache__/
+.venv/
+work/
+*.blend1
+*.egg-info/
+/attachments/
+/scratch/
+/shared/
+/library-files/
+
+/generated_images/

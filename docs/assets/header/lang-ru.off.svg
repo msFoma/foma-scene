@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="91" height="34" viewBox="0 0 91 34" role="img" aria-label="Русский">
+<title>Русский</title>
+<defs><linearGradient id="fill" x2="1" y2="1"><stop stop-color="#ffad89"/><stop offset="1" stop-color="#e97553"/></linearGradient></defs>
+<rect x=".5" y=".5" width="90" height="33" rx="9" fill="#16151e" stroke="#53404b"/>
+
+<text x="50%" y="22" text-anchor="middle" fill="#f4e7e8" font-family="Arial, sans-serif" font-size="15" font-weight="700">Русский</text>
+</svg>

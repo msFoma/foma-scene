@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="77" viewBox="0 0 720 77" role="img" aria-label="40 мм ширина декали сохранена; 0 пкс на соседней крышке и снизу; 4.3 · 4.5 · 5.2 протестированные версии Blender">
+<title>40 мм ширина декали сохранена; 0 пкс на соседней крышке и снизу; 4.3 · 4.5 · 5.2 протестированные версии Blender</title>
+<style>.number{font:700 22px Arial,sans-serif;fill:#ffad8e}.label{font:400 13px Arial,sans-serif;fill:#d2bbc3}text{text-anchor:middle}</style>
+<rect x=".5" y=".5" width="719" height="76" rx="13" fill="#15131d" stroke="#51404b"/>
+<path d="M240 15v47m240-47v47" stroke="#51404b"/>
+<text x="120" y="34" class="number">40 мм</text><text x="120" y="57" class="label">ширина декали сохранена</text><text x="360" y="34" class="number">0 пкс</text><text x="360" y="57" class="label">на соседней крышке и снизу</text><text x="600" y="34" class="number">4.3 · 4.5 · 5.2</text><text x="600" y="57" class="label">протестированные версии Blender</text>
+</svg>
