@@ -5,6 +5,7 @@ import json
 import logging
 import os
 import time
+from pathlib import Path
 from typing import Annotated, Literal
 from uuid import uuid4
 
@@ -332,7 +333,19 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--transport", choices=("stdio", "streamable-http"), default="stdio")
     parser.add_argument("--port", type=int, default=8766)
+    parser.add_argument("--bridge-config", type=Path,
+                        help="Local credentials written by the Foma Scene installer")
     args = parser.parse_args()
+    if args.bridge_config:
+        try:
+            config = json.loads(args.bridge_config.read_text(encoding="utf-8"))
+            token, port = config["token"], config["port"]
+            if not isinstance(token, str) or len(token) < 16 or type(port) is not int or not 1024 <= port <= 65535:
+                raise ValueError
+        except (OSError, ValueError, KeyError, TypeError):
+            parser.error("Cannot read bridge credentials. Run scripts/setup_scene.py again.")
+        os.environ.setdefault("BLENDER_MCP_TOKEN", token)
+        os.environ.setdefault("BLENDER_MCP_BRIDGE_PORT", str(port))
     server.settings.port = args.port
     server.run(transport=args.transport)
 

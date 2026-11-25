@@ -4,11 +4,48 @@
 
 <p><a href="README.md"><img src="docs/assets/header/lang-en.off.svg" height="34" alt="English"></a> <img src="docs/assets/header/lang-ru.on.svg" height="34" alt="Русский, текущая страница"></p>
 
-<p><strong>Blender MCP для работы с открытой сценой и проверки результата.</strong></p>
+<p><strong>Редактируйте открытую сцену Blender из Codex или Claude Code и проверяйте правки по рендерам и пиксельным сравнениям.</strong></p>
 
 <p><a href="#install"><img src="docs/assets/header/nav-install.ru.svg" height="42" alt="Установка"></a> <a href="#demos"><img src="docs/assets/header/nav-demo.ru.svg" height="42" alt="Демо"></a> <a href="#verification"><img src="docs/assets/header/nav-checks.ru.svg" height="42" alt="Проверки"></a></p>
 
-<img src="docs/assets/header/proof.ru.svg" width="720" alt="Декаль сохранила ширину 40 мм. На соседней крышке и снизу изменилось 0 пикселей. Тесты прошли на Blender 4.3, 4.5 и 5.2.">
+</div>
+
+<a id="install"></a>
+## Быстрый старт
+
+Понадобятся **Blender 4.3+**, **Python 3.11+** и установленный MCP-клиент. Закройте Blender, если он открыт, и выполните команды в терминале.
+
+```sh
+git clone https://github.com/msFoma/foma-scene.git
+cd foma-scene
+python scripts/setup_scene.py --client codex
+```
+
+Для Claude Code укажите `--client claude`. В Windows можно вызвать `py -3` вместо `python`. Скрипт создаст локальное окружение Python, установит и включит аддон, настроит подключение к Blender и добавит сервер `foma-scene` в клиент.
+
+Откройте Blender. В окне 3D Viewport нажмите **N**, откройте вкладку **Blender MCP** и нажмите **Connect**. Запустите новый сеанс в MCP-клиенте.
+
+<details>
+<summary>Путь к Blender, два клиента и настройка подключения</summary>
+
+- Если скрипт не нашёл Blender, добавьте `--blender "/путь/к/blender"`.
+- Чтобы подключить оба клиента, используйте `--client codex --client claude`. Запуск без `--client` выведет команды регистрации и сохранит текущие настройки клиентов.
+- После смены токена или порта в Blender запустите установку повторно. Если перенесёте папку проекта, повторите регистрацию, поскольку клиент использует абсолютные пути.
+- Ручная установка и Streamable HTTP описаны в [руководстве по подключению](docs/guide.md#connect-an-open-blender-session).
+
+</details>
+
+### Попробуйте в пустой сцене
+
+> Через Foma Scene создай передачу из шестерён на 18, 30 и 54 зуба. Укажи передаточное отношение и покажи рендер камеры.
+
+Готовые рабочие сценарии описаны в [навыке для агентов](skills/blender-mcp/SKILL.md) и [справочнике инструментов](docs/guide.md#tools-and-semantics).
+
+<div align="center">
+
+<img src="docs/assets/pixel-workshop.webp" width="48%" alt="Иллюстрация зубчатой передачи"> <img src="docs/assets/pixel-inspection.webp" width="48%" alt="Иллюстрация проверки декали">
+
+<sub>Пиксельные иллюстрации · зубчатая передача и проверка декали</sub>
 
 </div>
 
@@ -38,44 +75,10 @@
 
 </details>
 
-<a id="install"></a>
-## Установка
-
-Понадобятся **Python 3.11+** и **Blender 4.3+**. Из корня проекта установите MCP-сервер и соберите ZIP аддона.
-
-```sh
-python -m pip install -e .
-mkdir -p work
-python -m zipfile -c work/blender-bridge.zip blender_bridge
-```
-
-1. В Blender выберите **Edit → Preferences → Add-ons → Install from Disk**, откройте `work/blender-bridge.zip` и включите **Foma Scene · Blender MCP**.
-2. Укажите токен моста длиной от 16 символов в настройках аддона. Откройте вкладку **Blender MCP** в боковой панели 3D Viewport и нажмите **Connect**.
-3. Задайте тот же `BLENDER_MCP_TOKEN` в терминале, из которого запускается внешний MCP-сервер. Храните токен в локальном окружении.
-
-```sh
-python -m blender_mcp.server --transport streamable-http --port 8766
-```
-
-Добавьте запущенный локальный сервер в нужный клиент.
-
-```sh
-claude mcp add --transport http blender http://127.0.0.1:8766/mcp
-codex mcp add blender --url http://127.0.0.1:8766/mcp
-```
-
-[Подключение по stdio, порты и токен (EN)](docs/guide.md#connect-an-open-blender-session) · [Справочник инструментов (EN)](docs/guide.md#tools-and-semantics)
-
-### Первый запрос
-
-Откройте пустую сцену и используйте навык [`blender-mcp`](skills/blender-mcp/SKILL.md) в Codex или Claude Code.
-
-> Через Blender MCP создай передачу из шестерён на 18, 30 и 54 зуба. Укажи передаточное отношение и покажи рендер камеры.
-
-`inspect_scene` даст токен сцены, `create_gear_train` соберёт механизм, а `observe` вернёт рендер из Blender.
-
 <a id="verification"></a>
 ## Проверки
+
+<img src="docs/assets/header/proof.ru.svg" width="720" alt="Декаль сохранила ширину 40 мм. На соседней крышке и снизу изменилось 0 пикселей. Тесты прошли на Blender 4.3, 4.5 и 5.2.">
 
 | Что проверили | Результат |
 | --- | --- |

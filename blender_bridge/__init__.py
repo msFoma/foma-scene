@@ -119,14 +119,17 @@ class MCP_PT_sidebar(bpy.types.Panel):
     def draw(self, context):
         layout = self.layout
         layout.operator(MCP_OT_toggle.bl_idname, text="Disconnect" if bridge else "Connect")
-        if not bridge:
-            layout.label(text="Configure the token in Add-on Preferences")
         if bridge:
             layout.label(text=f"Loopback · {bridge.server.server_port}")
             if context.active_object:
                 layout.label(text=f"Target · {context.active_object.name}")
             layout.label(text=runtime.last_message)
             layout.operator(MCP_OT_rollback.bl_idname)
+        else:
+            addon = context.preferences.addons.get(__package__)
+            token = os.getenv("BLENDER_MCP_TOKEN") or (addon.preferences.token if addon else "")
+            if len(token) < 16:
+                layout.label(text="Configure the token in Add-on Preferences")
 
 
 CLASSES = (MCP_Preferences, MCP_OT_toggle, MCP_OT_rollback, MCP_PT_sidebar)

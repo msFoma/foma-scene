@@ -17,6 +17,10 @@ The SDK client starts one real Blender, initializes separate stdio and Streamabl
 
 ## Connect an open Blender session
 
+For the default stdio setup, run `python scripts/setup_scene.py --client codex` or use `--client claude`. The installer saves the add-on preferences in the selected Blender installation's user profile and pairs the local MCP server with the add-on. Close Blender before installing so it reloads those preferences at startup. Use Blender and the MCP client on the same machine. After setup, open Blender, press **N** in the 3D Viewport, and click **Blender MCP → Connect**.
+
+### Manual setup and local HTTP
+
 1. Package the add-on with `mkdir -p work && python -m zipfile -c work/blender-bridge.zip blender_bridge`. Install it under **Edit → Preferences → Add-ons → Install from Disk** and enable **Foma Scene · Blender MCP**. Set the bridge token in the add-on preferences. Then open **Blender MCP** in the 3D Viewport sidebar and click **Connect**.
 2. Use a local secret of at least 16 characters. Set the same value as `BLENDER_MCP_TOKEN` for the MCP process. If launching Blender from a shell, the environment variable overrides the token saved in Add-on Preferences. For a shell-launched Blender and client, generate it in their parent shell with `export BLENDER_MCP_TOKEN="$(python -c 'import secrets; print(secrets.token_urlsafe(32))')"`. The bridge port defaults to 8765. To change it, set Add-on Preferences and `BLENDER_MCP_BRIDGE_PORT` for the MCP process. For scripted sessions the environment variable overrides the Blender preference too.
 3. For stdio, start the client through the same environment. The command is `python -m blender_mcp.server`. For local Streamable HTTP, start `python -m blender_mcp.server --transport streamable-http --port 8766`. Clients attach to `http://127.0.0.1:8766/mcp`. The HTTP endpoint is for trusted local clients. The token authenticates the server-to-Blender bridge. Use the environment that can reach Blender's loopback interface.
