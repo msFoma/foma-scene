@@ -11,86 +11,134 @@
 </div>
 
 <a id="install"></a>
-## Quick start
 
-Install **Blender 4.3+**, **Python 3.11+**, and your MCP client. Close Blender if it's open, then run these commands in a terminal.
+## Installation
 
-```sh
-git clone https://github.com/msFoma/foma-scene.git
-cd foma-scene
-python scripts/setup_scene.py --client codex
-```
+### 1. Install the prerequisites
 
-For Claude Code, use `--client claude`. On Windows you can use `py -3` in place of `python`. Setup creates a local Python environment, installs and enables the Blender add-on, pairs the bridge, and registers `foma-scene` with your client.
+- **Blender 4.3+**. Download and install the desktop version. [Blender downloads](https://www.blender.org/download/)
+- **One MCP client**. Install the Codex CLI or Claude Code, then sign in. Check that `codex --version` or `claude --version` works in your terminal. [Codex CLI](https://developers.openai.com/codex/cli/) · [Claude Code](https://code.claude.com/docs/en/setup)
+- **Git and Python 3.11+**. Use the commands for your OS below.
 
-Open Blender. In the 3D Viewport press **N**, open **Blender MCP**, and click **Connect**. Start a fresh session in your MCP client.
+Close Blender before running setup. The script creates a local Python environment, enables the add-on in Blender, pairs it with the server, and registers `foma-scene` with your client. The examples use `--client codex`. For Claude Code, change it to `--client claude`. You can also pass both flags.
+
+### 2. Run setup for your OS
+
+[Linux](#install-linux) · [macOS](#install-macos) · [Windows](#install-windows)
+
+<a id="install-linux"></a>
 
 <details>
-<summary>Blender path, both clients, and connection help</summary>
+<summary><strong>Linux</strong> · Bash</summary>
 
-- If Blender is installed elsewhere, add `--blender "/path/to/blender"`.
-- To register both clients, use `--client codex --client claude`. Run setup without `--client` to print the registration commands without changing client settings.
-- If you've edited the token or port in Blender, run setup again to sync the local MCP configuration. Keep the checkout at the same path because the client registration uses absolute paths.
-- For a custom installation or Streamable HTTP, see the [connection guide](docs/guide.md#connect-an-open-blender-session).
+On Ubuntu 24.04 or Debian 12+, install Git, Python and support for virtual environments. On other distributions, use your package manager for the same dependencies.
+
+```bash
+sudo apt update
+sudo apt install git python3 python3-venv
+python3 --version
+git clone https://github.com/msFoma/foma-scene.git
+cd foma-scene
+python3 scripts/setup_scene.py --client codex
+```
+
+If Blender was downloaded as an archive, extract it and pass the full path to the `blender` executable. This example assumes you extracted it to `~/apps/blender`.
+
+```bash
+python3 scripts/setup_scene.py --client codex --blender "$HOME/apps/blender/blender"
+```
 
 </details>
 
-### Try it in a blank scene
-
-> Use Foma Scene to create a gear train with 18, 30 and 54 teeth. Show the transmission ratio and return a camera render.
-
-For reusable workflows, see the [agent skill](skills/blender-mcp/SKILL.md) and [tool reference](docs/guide.md#tools-and-semantics).
-
-<div align="center">
-
-<img src="docs/assets/pixel-workshop.webp" width="48%" alt="Illustrated gear assembly"> <img src="docs/assets/pixel-inspection.webp" width="48%" alt="Illustrated decal inspection">
-
-<sub>Pixel illustrations · gear assembly and decal inspection</sub>
-
-</div>
-
-## What you get
-
-| Live Blender | Scoped edits |
-| --- | --- |
-| Inspect the active object and receive actual camera renders or a viewport image. | Place and move editable decals in millimeters, run supported add-on operators, and build animated gear trains. |
-| **Visual checks** | **Recovery and export** |
-| Compare retained before and after frames. Set tolerances per region and verify protected views without another render. | Recover a job after a client disconnect, roll back recent edits, and reimport an exported GLB for inspection. |
-
-<a id="demos"></a>
-## Demos
-
-### Animated 3:1 gear train
-
-<img src="docs/assets/gear-train.webp" width="100%" loading="lazy" alt="The 18-, 30-, and 54-tooth gears generated through MCP on a machined base">
-
-Created with `create_gear_train` and rendered with `observe`. The saved scene was reopened in Blender, where one input turn advanced the output by **120° in the same direction**.
+<a id="install-macos"></a>
 
 <details>
-<summary>See the evidence from a scoped decal edit</summary>
+<summary><strong>macOS</strong> · Terminal</summary>
 
-<img src="docs/assets/edit-verification.png" width="700" loading="lazy" alt="The selected lid's changed logo pixels are pink. The neighboring lid has zero changed pixels.">
+Move Blender.app to **Applications**. With Homebrew installed, use `brew install git python`. You can also install Git and Python from their official download pages. [Git](https://git-scm.com/downloads) · [Python](https://www.python.org/downloads/macos/)
 
-Both lids started with a shared material. Foma Scene added a **40 mm** logo to one lid and moved it **3 mm** along local X. The neighbor and the underside registered **zero changed pixels**. The overlay came from `verify_edit`, using the retained camera frames.
+```bash
+python3 --version
+git --version
+git clone https://github.com/msFoma/foma-scene.git
+cd foma-scene
+python3 scripts/setup_scene.py --client codex
+```
+
+If the app is elsewhere or has a different name, pass the full path to the executable inside the app. For example, `--blender "/Applications/Blender LTS.app/Contents/MacOS/Blender"`.
+
+</details>
+
+<a id="install-windows"></a>
+
+<details>
+<summary><strong>Windows</strong> · PowerShell</summary>
+
+Install the Windows versions of Blender and your MCP client. With WinGet available, run the following commands to install Git and Python.
+
+```powershell
+winget install --id Git.Git --exact
+winget install --id Python.Python.3.12 --exact
+```
+
+You can also use the official installers. When installing Python manually, enable the launcher if offered. [Git for Windows](https://git-scm.com/download/win) · [Python for Windows](https://www.python.org/downloads/windows/)
+
+Open a new PowerShell window so it picks up the updated PATH, then run:
+
+```powershell
+py -3 --version
+git --version
+git clone https://github.com/msFoma/foma-scene.git
+Set-Location foma-scene
+py -3 scripts/setup_scene.py --client codex
+```
+
+If `py` is unavailable but `python --version` shows 3.11 or newer, use `python`. If setup cannot find Blender, add `--blender` with the path to your `blender.exe`, for example `--blender "C:\Program Files\Blender Foundation\Blender 4.5\blender.exe"`.
+
+</details>
+
+### 3. Connect and check
+
+1. Open Blender. Hover over the **3D Viewport**, press **N**, open **Blender MCP**, and click **Connect**. The button changes to **Disconnect** when Blender is listening.
+2. Check that `foma-scene` appears in `codex mcp list` or `claude mcp list`, then start a new session in that client.
+3. Select an object in Blender and ask the agent:
+
+   > Use Foma Scene to inspect the selected object and show me an image from the Blender viewport.
+
+<details>
+<summary>If the connection fails</summary>
+
+- **The Blender MCP tab is missing.** Reopen Blender and verify that setup targeted the same Blender installation. In **Preferences → Add-ons**, look for **Foma Scene · Blender MCP**.
+- **The client is missing from PATH.** Open a new terminal and check `codex --version` or `claude --version`. Setup without `--client` prints the registration commands.
+- **The tool cannot reach Blender.** Keep Blender and the client in the same local OS environment. On Windows, run both on Windows for this setup. Check that the sidebar shows **Disconnect**. If you changed the bridge token or port in Blender, close Blender and rerun setup to sync the settings.
+
+[Manual installation and Streamable HTTP](docs/guide.md#manual-setup-and-local-http)
+
+</details>
+
+<a id="demos"></a>
+
+## See it in action
+
+<img src="docs/assets/gear-train.webp" width="100%" loading="lazy" alt="Blender render of the generated 18-, 30-, and 54-tooth gears on a machined base">
+
+**Animated 3:1 gear train.** In a blank scene, ask Foma Scene to create gears with 18, 30 and 54 teeth and return a camera render. One input turn advances the output by 120° in the same direction.
+
+<details>
+<summary>Decal verification and pixel art gallery</summary>
+
+<img src="docs/assets/edit-verification.png" width="700" loading="lazy" alt="Pixel comparison of the edited lid and the untouched neighboring lid">
+
+Foma Scene applied a **40 mm** logo to one of two lids with a shared material and moved it **3 mm** along local X. The neighboring lid and underside had **zero changed pixels**.
+
+<img src="docs/assets/pixel-workshop.webp" width="48%" loading="lazy" alt="Pixel illustration of gears"> <img src="docs/assets/pixel-inspection.webp" width="48%" loading="lazy" alt="Pixel illustration of decal inspection">
 
 </details>
 
 <a id="verification"></a>
-## Verification
 
-<img src="docs/assets/header/proof.en.svg" width="720" alt="Acceptance checks preserved the 40 mm decal width, found zero changed pixels on the neighboring lid and underside, and passed on Blender 4.3, 4.5 and 5.2.">
+## Tools and verification
 
-| Check | Observed result |
-| --- | --- |
-| Blender | Acceptance passed on **4.3.2**, **4.5.5 LTS** and **5.2.3 LTS**, including a GUI run on 5.2.3. |
-| Transport | The same tool catalog returned camera images over **stdio** and **Streamable HTTP**. |
-| Verification speed | On the lid fixture, two cached overlays arrived in **133 ms**. Rendering the same two views again took **2.52 s**. |
-| Large scene | A detailed page of 200 instances in a 5,000-object scene fell from **2.10 s to 94 ms** median. |
-| Client status | Codex app-server received a Blender PNG and Claude Code connected to MCP. Model-backed tests still require authenticated sessions. |
+Foma Scene supports editable decals, camera and viewport captures, comparisons against reference views, supported add-on operators, rollback, and GLB reimport checks.
 
-```sh
-python tests/smoke.py
-python tests/scalability.py
-```
-
-[Reproduce the acceptance runs](docs/guide.md#run-the-wider-acceptance-check) · [Read the test evidence](docs/guide.md#verification-on-25-november-2026)
+[Tool reference](docs/guide.md#tools-and-semantics) · [Agent skill](skills/blender-mcp/SKILL.md) · [Test results](docs/guide.md#verification-on-25-november-2026)

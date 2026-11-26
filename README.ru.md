@@ -11,86 +11,134 @@
 </div>
 
 <a id="install"></a>
-## Быстрый старт
 
-Понадобятся **Blender 4.3+**, **Python 3.11+** и установленный MCP-клиент. Закройте Blender, если он открыт, и выполните команды в терминале.
+## Установка
 
-```sh
-git clone https://github.com/msFoma/foma-scene.git
-cd foma-scene
-python scripts/setup_scene.py --client codex
-```
+### 1. Установите зависимости
 
-Для Claude Code укажите `--client claude`. В Windows можно вызвать `py -3` вместо `python`. Скрипт создаст локальное окружение Python, установит и включит аддон, настроит подключение к Blender и добавит сервер `foma-scene` в клиент.
+- **Blender 4.3+**. Скачайте и установите обычную версию для вашей системы. [Скачать Blender](https://www.blender.org/download/)
+- **MCP-клиент**. Установите Codex CLI или Claude Code и войдите в аккаунт. Проверьте в терминале, что работает `codex --version` или `claude --version`. [Codex CLI](https://developers.openai.com/codex/cli/) · [Claude Code](https://code.claude.com/docs/en/setup)
+- **Git и Python 3.11+**. Команды для вашей системы приведены ниже.
 
-Откройте Blender. В окне 3D Viewport нажмите **N**, откройте вкладку **Blender MCP** и нажмите **Connect**. Запустите новый сеанс в MCP-клиенте.
+Перед установкой закройте Blender. Скрипт создаст локальное окружение Python, включит аддон, настроит его связь с сервером и зарегистрирует `foma-scene` в клиенте. В примерах указан Codex. Для Claude Code замените `--client codex` на `--client claude`. Можно указать и оба параметра.
+
+### 2. Запустите установку для своей системы
+
+[Linux](#install-linux) · [macOS](#install-macos) · [Windows](#install-windows)
+
+<a id="install-linux"></a>
 
 <details>
-<summary>Путь к Blender, два клиента и настройка подключения</summary>
+<summary><strong>Linux</strong> · Bash</summary>
 
-- Если скрипт не нашёл Blender, добавьте `--blender "/путь/к/blender"`.
-- Чтобы подключить оба клиента, используйте `--client codex --client claude`. Запуск без `--client` выведет команды регистрации и сохранит текущие настройки клиентов.
-- После смены токена или порта в Blender запустите установку повторно. Если перенесёте папку проекта, повторите регистрацию, поскольку клиент использует абсолютные пути.
-- Ручная установка и Streamable HTTP описаны в [руководстве по подключению](docs/guide.md#connect-an-open-blender-session).
+На Ubuntu 24.04 или Debian 12+ установите Git, Python и поддержку виртуальных окружений. В других дистрибутивах используйте их менеджер пакетов.
+
+```bash
+sudo apt update
+sudo apt install git python3 python3-venv
+python3 --version
+git clone https://github.com/msFoma/foma-scene.git
+cd foma-scene
+python3 scripts/setup_scene.py --client codex
+```
+
+Если Blender скачан архивом, распакуйте его и укажите полный путь к файлу `blender`. В примере архив распакован в `~/apps/blender`.
+
+```bash
+python3 scripts/setup_scene.py --client codex --blender "$HOME/apps/blender/blender"
+```
 
 </details>
 
-### Попробуйте в пустой сцене
-
-> Через Foma Scene создай передачу из шестерён на 18, 30 и 54 зуба. Укажи передаточное отношение и покажи рендер камеры.
-
-Готовые рабочие сценарии описаны в [навыке для агентов](skills/blender-mcp/SKILL.md) и [справочнике инструментов](docs/guide.md#tools-and-semantics).
-
-<div align="center">
-
-<img src="docs/assets/pixel-workshop.webp" width="48%" alt="Иллюстрация зубчатой передачи"> <img src="docs/assets/pixel-inspection.webp" width="48%" alt="Иллюстрация проверки декали">
-
-<sub>Пиксельные иллюстрации · зубчатая передача и проверка декали</sub>
-
-</div>
-
-## Возможности
-
-| Открытая сцена Blender | Точечные правки |
-| --- | --- |
-| Проверяйте выделенный объект, получайте рендеры камер и снимки viewport. | Наносите и сдвигайте декали в миллиметрах, вызывайте операции аддонов и собирайте анимированные передачи. |
-| **Проверка по кадрам** | **Восстановление и экспорт** |
-| Сравнивайте сохранённые кадры до и после правки. Задавайте допуски для отдельных участков без повторного рендера. | Возвращайтесь к заданию после разрыва связи, откатывайте недавние правки и проверяйте GLB повторным импортом. |
-
-<a id="demos"></a>
-## Демо
-
-### Анимированная передача 3:1
-
-<img src="docs/assets/gear-train.webp" width="100%" loading="lazy" alt="Три шестерни на 18, 30 и 54 зуба, собранные через MCP на металлическом основании">
-
-Механизм создан командой `create_gear_train` и отрендерен через `observe`. При повторном открытии сцены проверили, что за один оборот входной шестерни выходная поворачивается на **120° в ту же сторону**.
+<a id="install-macos"></a>
 
 <details>
-<summary>Посмотреть проверку точечной правки</summary>
+<summary><strong>macOS</strong> · Терминал</summary>
 
-<img src="docs/assets/edit-verification.png" width="700" loading="lazy" alt="Розовым отмечены изменённые пиксели логотипа. На соседней крышке 0 изменённых пикселей.">
+Переместите Blender.app в **Программы**. Если у вас установлен Homebrew, выполните `brew install git python`. Git и Python также можно установить с официальных сайтов. [Git](https://git-scm.com/downloads) · [Python](https://www.python.org/downloads/macos/)
 
-Две крышки использовали общий материал. Foma Scene нанёс на одну крышку логотип шириной **40 мм** и сдвинул его на **3 мм** по локальной оси X. На соседней крышке и снизу изменилось **0 пикселей**. Карту вернул `verify_edit` из уже полученных кадров.
+```bash
+python3 --version
+git --version
+git clone https://github.com/msFoma/foma-scene.git
+cd foma-scene
+python3 scripts/setup_scene.py --client codex
+```
+
+Если приложение лежит в другой папке или называется иначе, укажите путь к исполняемому файлу внутри приложения. Например, `--blender "/Applications/Blender LTS.app/Contents/MacOS/Blender"`.
+
+</details>
+
+<a id="install-windows"></a>
+
+<details>
+<summary><strong>Windows</strong> · PowerShell</summary>
+
+Установите версии Blender и MCP-клиента для Windows. Если доступен WinGet, установите Git и Python командами:
+
+```powershell
+winget install --id Git.Git --exact
+winget install --id Python.Python.3.12 --exact
+```
+
+Можно воспользоваться и официальными установщиками. При ручной установке Python включите лаунчер, если установщик предлагает такой вариант. [Git для Windows](https://git-scm.com/download/win) · [Python для Windows](https://www.python.org/downloads/windows/)
+
+Откройте новое окно PowerShell, чтобы обновился PATH, и выполните:
+
+```powershell
+py -3 --version
+git --version
+git clone https://github.com/msFoma/foma-scene.git
+Set-Location foma-scene
+py -3 scripts/setup_scene.py --client codex
+```
+
+Если команда `py` недоступна, но `python --version` показывает 3.11 или новее, используйте `python`. Если скрипт не нашёл Blender, добавьте `--blender` и путь к вашему `blender.exe`. Например, `--blender "C:\Program Files\Blender Foundation\Blender 4.5\blender.exe"`.
+
+</details>
+
+### 3. Подключите Blender и проверьте связь
+
+1. Откройте Blender. Наведите курсор на **3D Viewport**, нажмите **N**, откройте вкладку **Blender MCP** и нажмите **Connect**. Когда мост запустится, кнопка сменится на **Disconnect**.
+2. Убедитесь, что сервер `foma-scene` есть в списке `codex mcp list` или `claude mcp list`. Затем начните новый сеанс в клиенте.
+3. Выделите объект в Blender и попросите агента:
+
+   > Через Foma Scene проверь выделенный объект и покажи снимок из окна 3D Viewport.
+
+<details>
+<summary>Если подключение не работает</summary>
+
+- **Вкладки Blender MCP нет.** Перезапустите Blender и проверьте, что скрипт установил аддон в ту же версию программы. Найдите **Foma Scene · Blender MCP** в **Preferences → Add-ons**.
+- **Команда клиента не найдена.** Откройте новый терминал и проверьте `codex --version` или `claude --version`. При запуске без `--client` скрипт выведет команды регистрации.
+- **Сервер не видит Blender.** Запустите клиент и Blender в одной локальной среде. Для этой установки на Windows запускайте оба приложения в Windows. Убедитесь, что в боковой панели видна кнопка **Disconnect**. Если меняли токен или порт моста, закройте Blender и запустите установку ещё раз.
+
+[Ручная установка и Streamable HTTP (EN)](docs/guide.md#manual-setup-and-local-http)
+
+</details>
+
+<a id="demos"></a>
+
+## Демо
+
+<img src="docs/assets/gear-train.webp" width="100%" loading="lazy" alt="Рендер Blender с шестернями на 18, 30 и 54 зуба на металлическом основании">
+
+**Анимированная передача 3:1.** В пустой сцене попросите Foma Scene создать шестерни на 18, 30 и 54 зуба и показать рендер камеры. За один оборот входной шестерни выходная поворачивается на 120° в ту же сторону.
+
+<details>
+<summary>Проверка декали и пиксельные иллюстрации</summary>
+
+<img src="docs/assets/edit-verification.png" width="700" loading="lazy" alt="Пиксельное сравнение изменённой крышки и нетронутой соседней крышки">
+
+Foma Scene нанёс логотип шириной **40 мм** на одну из двух крышек с общим материалом и сдвинул его на **3 мм** по локальной оси X. На соседней крышке и снизу изменилось **0 пикселей**.
+
+<img src="docs/assets/pixel-workshop.webp" width="48%" loading="lazy" alt="Пиксельная иллюстрация шестерён"> <img src="docs/assets/pixel-inspection.webp" width="48%" loading="lazy" alt="Пиксельная иллюстрация проверки декали">
 
 </details>
 
 <a id="verification"></a>
-## Проверки
 
-<img src="docs/assets/header/proof.ru.svg" width="720" alt="Декаль сохранила ширину 40 мм. На соседней крышке и снизу изменилось 0 пикселей. Тесты прошли на Blender 4.3, 4.5 и 5.2.">
+## Инструменты и проверки
 
-| Что проверили | Результат |
-| --- | --- |
-| Версии Blender | Приёмка прошла на **4.3.2**, **4.5.5 LTS** и **5.2.3 LTS**, включая GUI на 5.2.3. |
-| MCP | Один каталог инструментов вернул изображения камер через **stdio** и **Streamable HTTP**. |
-| Скорость сравнения | На сцене с крышками две карты изменений пришли за **133 мс**. Повторный рендер тех же ракурсов занял **2,52 с**. |
-| Большая сцена | Медиана запроса подробной страницы из 200 экземпляров на сцене из 5 000 объектов сократилась с **2,10 с до 94 мс**. |
-| Клиенты | Codex app-server получил PNG из Blender, Claude Code подключился к MCP. Для модельных прогонов остаётся войти в оба клиента. |
+Foma Scene поддерживает редактируемые декали, рендеры камер и снимки 3D Viewport, сравнение с референсами, операции совместимых аддонов, откат и проверку GLB повторным импортом.
 
-```sh
-python tests/smoke.py
-python tests/scalability.py
-```
-
-[Команды полной приёмки (EN)](docs/guide.md#run-the-wider-acceptance-check) · [Результаты тестов (EN)](docs/guide.md#verification-on-25-november-2026)
+[Справочник инструментов (EN)](docs/guide.md#tools-and-semantics) · [Навык для агентов (EN)](skills/blender-mcp/SKILL.md) · [Результаты тестов (EN)](docs/guide.md#verification-on-25-november-2026)
