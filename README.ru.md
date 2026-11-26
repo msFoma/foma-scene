@@ -8,6 +8,8 @@
 
 <p><a href="#install"><img src="docs/assets/header/nav-install.ru.svg" height="42" alt="Установка"></a> <a href="#demos"><img src="docs/assets/header/nav-demo.ru.svg" height="42" alt="Демо"></a> <a href="#verification"><img src="docs/assets/header/nav-checks.ru.svg" height="42" alt="Проверки"></a></p>
 
+<p><a href="#project-structure">Устройство проекта</a></p>
+
 </div>
 
 <a id="install"></a>
@@ -17,12 +19,10 @@
 ### 1. Установите зависимости
 
 - **Blender 4.3+**. Скачайте и установите обычную версию для вашей системы. [Скачать Blender](https://www.blender.org/download/)
-- **MCP-клиент**. Установите Codex CLI или Claude Code и войдите в аккаунт. Проверьте в терминале, что работает `codex --version` или `claude --version`. [Codex CLI](https://developers.openai.com/codex/cli/) · [Claude Code](https://code.claude.com/docs/en/setup)
+- **MCP-клиент**. Установите Codex CLI или Claude Code и войдите в аккаунт. Проверьте в терминале, что команда `codex --version` или `claude --version` выводит версию. [Codex CLI](https://developers.openai.com/codex/cli/) · [Claude Code](https://code.claude.com/docs/en/setup)
 - **Git и Python 3.11+**. Команды для вашей системы приведены ниже.
 
-Перед установкой закройте Blender. Скрипт создаст локальное окружение Python, включит аддон, настроит его связь с сервером и зарегистрирует `foma-scene` в клиенте. В примерах указан Codex. Для Claude Code замените `--client codex` на `--client claude`. Можно указать и оба параметра.
-
-### 2. Запустите установку для своей системы
+### 2. Подготовьте систему
 
 [Linux](#install-linux) · [macOS](#install-macos) · [Windows](#install-windows)
 
@@ -37,16 +37,9 @@
 sudo apt update
 sudo apt install git python3 python3-venv
 python3 --version
-git clone https://github.com/msFoma/foma-scene.git
-cd foma-scene
-python3 scripts/setup_scene.py --client codex
 ```
 
-Если Blender скачан архивом, распакуйте его и укажите полный путь к файлу `blender`. В примере архив распакован в `~/apps/blender`.
-
-```bash
-python3 scripts/setup_scene.py --client codex --blender "$HOME/apps/blender/blender"
-```
+Если Blender скачан архивом, распакуйте его. При запуске установщика добавьте путь к исполняемому файлу. Например, `--blender "$HOME/apps/blender/blender"`.
 
 </details>
 
@@ -60,9 +53,6 @@ python3 scripts/setup_scene.py --client codex --blender "$HOME/apps/blender/blen
 ```bash
 python3 --version
 git --version
-git clone https://github.com/msFoma/foma-scene.git
-cd foma-scene
-python3 scripts/setup_scene.py --client codex
 ```
 
 Если приложение лежит в другой папке или называется иначе, укажите путь к исполняемому файлу внутри приложения. Например, `--blender "/Applications/Blender LTS.app/Contents/MacOS/Blender"`.
@@ -88,20 +78,84 @@ winget install --id Python.Python.3.12 --exact
 ```powershell
 py -3 --version
 git --version
-git clone https://github.com/msFoma/foma-scene.git
-Set-Location foma-scene
-py -3 scripts/setup_scene.py --client codex
 ```
 
 Если команда `py` недоступна, но `python --version` показывает 3.11 или новее, используйте `python`. Если скрипт не нашёл Blender, добавьте `--blender` и путь к вашему `blender.exe`. Например, `--blender "C:\Program Files\Blender Foundation\Blender 4.5\blender.exe"`.
 
 </details>
 
-### 3. Подключите Blender и проверьте связь
+### 3. Скачайте Foma Scene и выберите клиента
+
+Закройте Blender. Склонируйте репозиторий и перейдите в его папку. На Windows выполняйте команды в PowerShell.
+
+```sh
+git clone https://github.com/msFoma/foma-scene.git
+cd foma-scene
+```
+
+Установщик включит аддон в Blender и зарегистрирует сервер `foma-scene` в выбранном клиенте.
+
+<table>
+  <tr>
+    <th><a href="#setup-codex">Codex CLI</a></th>
+    <th><a href="#setup-claude">Claude Code</a></th>
+  </tr>
+  <tr>
+    <td align="center"><a href="#setup-codex"><img src="docs/assets/client-codex.webp" width="320" alt="Синий терминал Codex в пиксельном стиле"><br>К настройке</a></td>
+    <td align="center"><a href="#setup-claude"><img src="docs/assets/client-claude.webp" width="320" alt="Медный терминал Claude Code в пиксельном стиле"><br>К настройке</a></td>
+  </tr>
+</table>
+
+<a id="setup-codex"></a>
+
+#### Codex CLI
+
+**Linux / macOS**
+
+```bash
+python3 scripts/setup_scene.py --client codex
+codex mcp list
+```
+
+<details>
+<summary>Windows · PowerShell</summary>
+
+```powershell
+py -3 scripts/setup_scene.py --client codex
+codex mcp list
+```
+
+</details>
+
+Команда `codex mcp list` должна показать `foma-scene` со статусом `enabled`. После подключения Blender запустите `codex`.
+
+<a id="setup-claude"></a>
+
+#### Claude Code
+
+**Linux / macOS**
+
+```bash
+python3 scripts/setup_scene.py --client claude
+claude mcp list
+```
+
+<details>
+<summary>Windows · PowerShell</summary>
+
+```powershell
+py -3 scripts/setup_scene.py --client claude
+claude mcp list
+```
+
+</details>
+
+Команда `claude mcp list` должна показать `foma-scene` со статусом `Connected`. После подключения Blender запустите `claude`.
+
+### 4. Подключите Blender
 
 1. Откройте Blender. Наведите курсор на **3D Viewport**, нажмите **N**, откройте вкладку **Blender MCP** и нажмите **Connect**. Когда мост запустится, кнопка сменится на **Disconnect**.
-2. Убедитесь, что сервер `foma-scene` есть в списке `codex mcp list` или `claude mcp list`. Затем начните новый сеанс в клиенте.
-3. Выделите объект в Blender и попросите агента:
+2. Запустите выбранный клиент. Выделите объект в Blender и попросите агента:
 
    > Через Foma Scene проверь выделенный объект и покажи снимок из окна 3D Viewport.
 
@@ -124,16 +178,27 @@ py -3 scripts/setup_scene.py --client codex
 
 **Анимированная передача 3:1.** В пустой сцене попросите Foma Scene создать шестерни на 18, 30 и 54 зуба и показать рендер камеры. За один оборот входной шестерни выходная поворачивается на 120° в ту же сторону.
 
-<details>
-<summary>Проверка декали и пиксельные иллюстрации</summary>
+<a id="project-structure"></a>
 
-<img src="docs/assets/edit-verification.png" width="700" loading="lazy" alt="Пиксельное сравнение изменённой крышки и нетронутой соседней крышки">
+## Устройство проекта
 
-Foma Scene нанёс логотип шириной **40 мм** на одну из двух крышек с общим материалом и сдвинул его на **3 мм** по локальной оси X. На соседней крышке и снизу изменилось **0 пикселей**.
+<p><strong>Codex / Claude Code → MCP → Blender</strong></p>
 
-<img src="docs/assets/pixel-workshop.webp" width="48%" loading="lazy" alt="Пиксельная иллюстрация шестерён"> <img src="docs/assets/pixel-inspection.webp" width="48%" loading="lazy" alt="Пиксельная иллюстрация проверки декали">
+Клиент запускает локальный MCP-сервер. Сервер передаёт запрос аддону в открытой сессии Blender и возвращает данные и изображения клиенту.
 
-</details>
+<table>
+  <thead>
+    <tr><th scope="col">Каталог</th><th scope="col">За что отвечает</th></tr>
+  </thead>
+  <tbody>
+    <tr><th scope="row"><a href="blender_bridge/"><code>blender_bridge/</code></a></th><td>Аддон выполняет операции в главном потоке Blender, снимает кадры и хранит историю правок.</td></tr>
+    <tr><th scope="row"><a href="blender_mcp/"><code>blender_mcp/</code></a></th><td>MCP-сервер принимает команды клиентов по stdio или локальному Streamable HTTP.</td></tr>
+    <tr><th scope="row"><a href="scripts/"><code>scripts/</code></a></th><td>Установщик создаёт окружение Python, включает аддон и регистрирует MCP в выбранном клиенте.</td></tr>
+    <tr><th scope="row"><a href="skills/blender-mcp/"><code>skills/blender-mcp/</code></a></th><td>Навык описывает действия агента и проверку результата в Blender.</td></tr>
+    <tr><th scope="row"><a href="tests/"><code>tests/</code></a></th><td>Сценарии проверяют MCP и операции в настоящем Blender.</td></tr>
+    <tr><th scope="row"><a href="docs/"><code>docs/</code></a></th><td>Справочник инструментов, результаты проверок и иллюстрации.</td></tr>
+  </tbody>
+</table>
 
 <a id="verification"></a>
 

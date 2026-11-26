@@ -8,6 +8,8 @@
 
 <p><a href="#install"><img src="docs/assets/header/nav-install.en.svg" height="42" alt="Install"></a> <a href="#demos"><img src="docs/assets/header/nav-demo.en.svg" height="42" alt="Demos"></a> <a href="#verification"><img src="docs/assets/header/nav-checks.en.svg" height="42" alt="Verification"></a></p>
 
+<p><a href="#project-structure">Project structure</a></p>
+
 </div>
 
 <a id="install"></a>
@@ -20,9 +22,7 @@
 - **One MCP client**. Install the Codex CLI or Claude Code, then sign in. Check that `codex --version` or `claude --version` works in your terminal. [Codex CLI](https://developers.openai.com/codex/cli/) · [Claude Code](https://code.claude.com/docs/en/setup)
 - **Git and Python 3.11+**. Use the commands for your OS below.
 
-Close Blender before running setup. The script creates a local Python environment, enables the add-on in Blender, pairs it with the server, and registers `foma-scene` with your client. The examples use `--client codex`. For Claude Code, change it to `--client claude`. You can also pass both flags.
-
-### 2. Run setup for your OS
+### 2. Prepare your system
 
 [Linux](#install-linux) · [macOS](#install-macos) · [Windows](#install-windows)
 
@@ -37,16 +37,9 @@ On Ubuntu 24.04 or Debian 12+, install Git, Python and support for virtual envir
 sudo apt update
 sudo apt install git python3 python3-venv
 python3 --version
-git clone https://github.com/msFoma/foma-scene.git
-cd foma-scene
-python3 scripts/setup_scene.py --client codex
 ```
 
-If Blender was downloaded as an archive, extract it and pass the full path to the `blender` executable. This example assumes you extracted it to `~/apps/blender`.
-
-```bash
-python3 scripts/setup_scene.py --client codex --blender "$HOME/apps/blender/blender"
-```
+If you downloaded Blender as an archive, extract it and pass the executable path when you run setup. For example, use `--blender "$HOME/apps/blender/blender"`.
 
 </details>
 
@@ -60,9 +53,6 @@ Move Blender.app to **Applications**. With Homebrew installed, use `brew install
 ```bash
 python3 --version
 git --version
-git clone https://github.com/msFoma/foma-scene.git
-cd foma-scene
-python3 scripts/setup_scene.py --client codex
 ```
 
 If the app is elsewhere or has a different name, pass the full path to the executable inside the app. For example, `--blender "/Applications/Blender LTS.app/Contents/MacOS/Blender"`.
@@ -88,20 +78,84 @@ Open a new PowerShell window so it picks up the updated PATH, then run:
 ```powershell
 py -3 --version
 git --version
-git clone https://github.com/msFoma/foma-scene.git
-Set-Location foma-scene
-py -3 scripts/setup_scene.py --client codex
 ```
 
 If `py` is unavailable but `python --version` shows 3.11 or newer, use `python`. If setup cannot find Blender, add `--blender` with the path to your `blender.exe`, for example `--blender "C:\Program Files\Blender Foundation\Blender 4.5\blender.exe"`.
 
 </details>
 
-### 3. Connect and check
+### 3. Download Foma Scene and choose a client
+
+Close Blender. Clone the repository and change to its directory. On Windows, run these commands in PowerShell.
+
+```sh
+git clone https://github.com/msFoma/foma-scene.git
+cd foma-scene
+```
+
+Setup enables the Blender add-on and registers the `foma-scene` server with the chosen client.
+
+<table>
+  <tr>
+    <th><a href="#setup-codex">Codex CLI</a></th>
+    <th><a href="#setup-claude">Claude Code</a></th>
+  </tr>
+  <tr>
+    <td align="center"><a href="#setup-codex"><img src="docs/assets/client-codex.webp" width="320" alt="Blue pixel-art terminal for Codex"><br>Setup instructions</a></td>
+    <td align="center"><a href="#setup-claude"><img src="docs/assets/client-claude.webp" width="320" alt="Copper pixel-art terminal for Claude Code"><br>Setup instructions</a></td>
+  </tr>
+</table>
+
+<a id="setup-codex"></a>
+
+#### Codex CLI
+
+**Linux / macOS**
+
+```bash
+python3 scripts/setup_scene.py --client codex
+codex mcp list
+```
+
+<details>
+<summary>Windows · In PowerShell</summary>
+
+```powershell
+py -3 scripts/setup_scene.py --client codex
+codex mcp list
+```
+
+</details>
+
+`codex mcp list` should show `foma-scene` as `enabled`. After connecting Blender, start `codex`.
+
+<a id="setup-claude"></a>
+
+#### Claude Code
+
+**Linux / macOS**
+
+```bash
+python3 scripts/setup_scene.py --client claude
+claude mcp list
+```
+
+<details>
+<summary>Windows · In PowerShell</summary>
+
+```powershell
+py -3 scripts/setup_scene.py --client claude
+claude mcp list
+```
+
+</details>
+
+`claude mcp list` should show `foma-scene` as `Connected`. After connecting Blender, start `claude`.
+
+### 4. Connect Blender
 
 1. Open Blender. Hover over the **3D Viewport**, press **N**, open **Blender MCP**, and click **Connect**. The button changes to **Disconnect** when Blender is listening.
-2. Check that `foma-scene` appears in `codex mcp list` or `claude mcp list`, then start a new session in that client.
-3. Select an object in Blender and ask the agent:
+2. Start your client. Select an object in Blender and ask the agent:
 
    > Use Foma Scene to inspect the selected object and show me an image from the Blender viewport.
 
@@ -124,16 +178,27 @@ If `py` is unavailable but `python --version` shows 3.11 or newer, use `python`.
 
 **Animated 3:1 gear train.** In a blank scene, ask Foma Scene to create gears with 18, 30 and 54 teeth and return a camera render. One input turn advances the output by 120° in the same direction.
 
-<details>
-<summary>Decal verification and pixel art gallery</summary>
+<a id="project-structure"></a>
 
-<img src="docs/assets/edit-verification.png" width="700" loading="lazy" alt="Pixel comparison of the edited lid and the untouched neighboring lid">
+## Project structure
 
-Foma Scene applied a **40 mm** logo to one of two lids with a shared material and moved it **3 mm** along local X. The neighboring lid and underside had **zero changed pixels**.
+<p><strong>Codex / Claude Code → MCP → Blender</strong></p>
 
-<img src="docs/assets/pixel-workshop.webp" width="48%" loading="lazy" alt="Pixel illustration of gears"> <img src="docs/assets/pixel-inspection.webp" width="48%" loading="lazy" alt="Pixel illustration of decal inspection">
+The client starts a local MCP server. The server passes requests to the add-on in the open Blender session and returns data and images to the client.
 
-</details>
+<table>
+  <thead>
+    <tr><th scope="col">Directory</th><th scope="col">Responsibility</th></tr>
+  </thead>
+  <tbody>
+    <tr><th scope="row"><a href="blender_bridge/"><code>blender_bridge/</code></a></th><td>The add-on runs operations on Blender’s main thread, captures frames, and keeps edit history.</td></tr>
+    <tr><th scope="row"><a href="blender_mcp/"><code>blender_mcp/</code></a></th><td>The MCP server receives client requests over stdio or local Streamable HTTP.</td></tr>
+    <tr><th scope="row"><a href="scripts/"><code>scripts/</code></a></th><td>Setup creates the Python environment, enables the add-on, and registers MCP with the chosen client.</td></tr>
+    <tr><th scope="row"><a href="skills/blender-mcp/"><code>skills/blender-mcp/</code></a></th><td>The agent skill explains which tools to use and how to check results in Blender.</td></tr>
+    <tr><th scope="row"><a href="tests/"><code>tests/</code></a></th><td>Tests exercise the MCP transports and operations in a real Blender session.</td></tr>
+    <tr><th scope="row"><a href="docs/"><code>docs/</code></a></th><td>Tool reference, test evidence, and illustrations.</td></tr>
+  </tbody>
+</table>
 
 <a id="verification"></a>
 
